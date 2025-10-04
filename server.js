@@ -44,7 +44,7 @@ app.post('/send-notification', async (req, res) => {
     };
     
     const response = await admin.messaging().send(message);
-    console.log('✅ Notification sent:', response);
+    // console.log('✅ Notification sent:', response);
     
     res.json({ success: true, messageId: response });
   } catch (error) {

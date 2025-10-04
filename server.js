@@ -19,7 +19,7 @@ app.post('/send-notification', async (req, res) => {
   try {
     const { fcmToken, title, body, data } = req.body;
 
-    console.log("BODY", req.body);
+    // console.log("BODY", req.body);
     
     if (!fcmToken) {
       return res.status(400).json({ error: 'FCM token required' });

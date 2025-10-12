@@ -33,12 +33,26 @@ app.post('/send-notification', async (req, res) => {
         title: title || 'New Message',
         body: body || 'You have a new message',
       },
-      data: data || {},
+      data: {
+        ...data, 
+        messageId: data.messageId,
+        notificationId: `${data.messageId}_${Date.now()}`,
+      },
       android: {
         priority: 'high',
         notification: {
           channelId: 'chat_messages',
           sound: 'default',
+          tag: data.messageId,
+        },
+      },
+      apns: {
+        payload: {
+          aps: {
+            sound: 'default',
+            badge: 1,
+            'thread-id': data.chatId,
+          },
         },
       },
     };
@@ -46,7 +60,13 @@ app.post('/send-notification', async (req, res) => {
     const response = await admin.messaging().send(message);
     // console.log('✅ Notification sent:', response);
     
-    res.json({ success: true, messageId: response });
+    // res.json({ success: true, messageId: response });
+
+    res.status(200).json({
+      success: true,
+      messageId: response,
+      timestamp: new Date().toISOString(),
+    });
   } catch (error) {
     console.error('❌ Error:', error);
     res.status(500).json({ error: error.message });
